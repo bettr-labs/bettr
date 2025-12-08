@@ -10,7 +10,8 @@ data class EnrollAccountCommandHandler(
     fun execute(command: EnrollAccountCommand) {
         val account = Account.enroll(
             id = command.aggregateId,
-            nickname = command.nickname
+            nickname = command.nickname,
+            password = command.password
         )
 
         accountRepository.create(account)

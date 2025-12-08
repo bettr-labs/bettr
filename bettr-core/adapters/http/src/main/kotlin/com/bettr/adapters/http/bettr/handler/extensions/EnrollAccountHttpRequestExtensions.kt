@@ -9,5 +9,6 @@ fun EnrollAccountHttpRequest.toCommand(): EnrollAccountCommand = EnrollAccountCo
     occurredOn = kotlinx.datetime.Clock.System.now(),
     metadata = emptyMap(),
     aggregateId = UUID.randomUUID().toString(),
-    nickname = this.nickname
+    nickname = this.nickname,
+    password = this.password
 )

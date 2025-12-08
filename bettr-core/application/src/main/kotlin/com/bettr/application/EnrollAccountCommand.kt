@@ -8,5 +8,6 @@ data class EnrollAccountCommand(
     val occurredOn: Instant,
     val metadata: Map<String, String>,
     val aggregateId: String,
-    val nickname: String
+    val nickname: String,
+    val password: String
 )

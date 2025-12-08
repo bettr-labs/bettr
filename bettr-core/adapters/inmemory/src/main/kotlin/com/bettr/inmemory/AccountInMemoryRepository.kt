@@ -10,4 +10,12 @@ class AccountInMemoryRepository : AccountRepository {
     override fun create(account: Account) {
         repository[account.id] = account
     }
+
+    override fun findById(id: String): Account? {
+        return repository[id]
+    }
+
+    override fun findByNickname(nickname: String): Account? {
+        return repository.values.find { it.nickname == nickname }
+    }
 }
