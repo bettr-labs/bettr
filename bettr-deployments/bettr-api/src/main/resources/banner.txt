@@ -1,0 +1,2 @@
+${AnsiColor.BRIGHT_RED}Bettr Api${application.formatted-version}
+${AnsiColor.BRIGHT_RED}Running on Spring Boot ${spring-boot.formatted-version}
