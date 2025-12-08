@@ -11,7 +11,7 @@
     </Appenders>
 
     <Loggers>
-        <AsyncLogger name="com.ifood" level="INFO"/>
+        <AsyncLogger name="com.bettr" level="INFO"/>
         <Root level="WARN">
             <AppenderRef ref="ASYNC"/>
         </Root>
