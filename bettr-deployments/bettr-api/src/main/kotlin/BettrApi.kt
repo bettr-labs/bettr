@@ -3,7 +3,9 @@ package com.bettr
 import com.bettr.adapters.http.bettr.WebFluxConfiguration
 import com.bettr.adapters.http.bettr.apiRouter
 import com.bettr.adapters.http.bettr.handler.EnrollAccountHttpHandler
+import com.bettr.adapters.http.bettr.handler.LoginHttpHandler
 import com.bettr.application.EnrollAccountCommandHandler
+import com.bettr.application.LoginCommandHandler
 import com.bettr.inmemory.AccountInMemoryRepository
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -32,9 +34,11 @@ fun beans() =
 
         // Http handlers
         bean<EnrollAccountHttpHandler>()
+        bean<LoginHttpHandler>()
 
         // Command handlers
         bean<EnrollAccountCommandHandler>()
+        bean<LoginCommandHandler>()
 
         // InMemory Repositories TODO - change to r2dbc
         bean<AccountInMemoryRepository>()
