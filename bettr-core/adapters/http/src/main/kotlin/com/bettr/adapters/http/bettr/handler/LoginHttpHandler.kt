@@ -25,7 +25,7 @@ class LoginHttpHandler(
             )
             ServerResponse.ok().bodyValueAndAwait(LoginResponse(accountId))
         } catch (e: IllegalArgumentException) {
-            ServerResponse.status(HttpStatus.UNAUTHORIZED).buildAndAwait()
+            ServerResponse.status(HttpStatus.UNAUTHORIZED).bodyValueAndAwait(mapOf("reason" to e.message))
         }
     }
 }

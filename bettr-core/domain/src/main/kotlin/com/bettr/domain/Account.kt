@@ -1,9 +1,18 @@
 package com.bettr.domain
 
+import java.time.Instant
+
+enum class AccountStatus {
+    ACTIVE,
+    INACTIVE
+}
+
 data class Account(
     val id: String,
     val nickname: String,
-    val password: String
+    val password: String,
+    val createdAt: Instant,
+    val status: AccountStatus
 ) {
 
     companion object {
@@ -11,7 +20,9 @@ data class Account(
             return Account(
                 id = id,
                 nickname = nickname,
-                password = password
+                password = password,
+                createdAt = Instant.now(),
+                status = AccountStatus.ACTIVE
             ).validate()
         }
     }

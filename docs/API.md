@@ -43,7 +43,75 @@ Retornado quando o nickname já está em uso.
 
 ---
 
-### 2. Login
+### 2. Buscar Conta
+
+Retorna os dados de uma conta.
+
+- **URL:** `/accounts?accountId={uuid-da-conta}`
+- **Método:** `GET`
+
+#### Resposta de Sucesso (200 OK)
+
+```json
+{
+  "id": "uuid-da-conta",
+  "nickname": "usuario_exemplo",
+  "password": "senha_segura_123",
+  "createdAt": "2023-10-27T10:00:00Z",
+  "status": "ACTIVE"
+}
+```
+
+#### Resposta de Erro (404 Not Found)
+
+Se a conta não for encontrada.
+
+---
+
+### 3. Atualizar Conta
+
+Atualiza dados da conta (nickname).
+
+- **URL:** `/accounts?accountId={uuid-da-conta}`
+- **Método:** `PATCH`
+- **Content-Type:** `application/json`
+
+#### Corpo da Requisição
+
+```json
+{
+  "nickname": "novo_nickname"
+}
+```
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+#### Resposta de Erro (404 Not Found)
+
+Se a conta não for encontrada.
+
+---
+
+### 4. Desativar Conta
+
+Desativa uma conta (muda status para INACTIVE).
+
+- **URL:** `/accounts/deactivate?accountId={uuid-da-conta}`
+- **Método:** `PATCH`
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+#### Resposta de Erro (404 Not Found)
+
+Se a conta não for encontrada.
+
+---
+
+### 5. Login
 
 Autentica um usuário existente.
 
@@ -70,9 +138,163 @@ Autentica um usuário existente.
 
 #### Resposta de Erro (401 Unauthorized)
 
-Retornado quando as credenciais são inválidas.
+Retornado quando as credenciais são inválidas ou a conta está inativa.
 
+**Credenciais Inválidas:**
 ```json
-// Sem corpo (ou corpo de erro padrão do Spring)
+{
+  "reason": "combination of Nickname and password is invalid"
+}
 ```
 
+**Conta Inativa:**
+```json
+{
+  "reason": "account is inactive"
+}
+```
+
+---
+
+### 6. Tipos de Dreams
+
+Lista os tipos de sonhos disponíveis.
+
+- **URL:** `/dreams-types`
+- **Método:** `GET`
+
+#### Resposta de Sucesso (200 OK)
+
+```json
+[
+  {
+    "key": "HOME",
+    "label": "Comprar um imóvel",
+    "emoji": "house"
+  },
+  {
+    "key": "TRAVEL",
+    "label": "Viajar",
+    "emoji": "plane"
+  }
+  // ... outros tipos
+]
+```
+
+---
+
+### 7. Criar Dreams
+
+Cadastra uma lista de sonhos para um usuário. `currentAmount` é inicializado como zero.
+
+- **URL:** `/dreams`
+- **Método:** `POST`
+- **Content-Type:** `application/json`
+
+#### Corpo da Requisição
+
+```json
+[
+  {
+    "accountId": "uuid-da-conta",
+    "title": "Minha casa própria",
+    "targetAmount": 500000.00,
+    "deadline": "2030-01-01"
+  },
+  {
+    "accountId": "uuid-da-conta",
+    "title": "Viagem para Paris",
+    "targetAmount": 15000.00,
+    "deadline": "2025-12-31"
+  }
+]
+```
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+---
+
+### 8. Atualizar Dream (Depositar)
+
+Atualiza o valor atual (`currentAmount`) de um sonho.
+
+- **URL:** `/dreams?accountId={uuid-da-conta}&dreamId={uuid-do-sonho}`
+- **Método:** `PATCH`
+- **Content-Type:** `application/json`
+
+#### Corpo da Requisição
+
+```json
+{
+  "currentAmount": 1500.00
+}
+```
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+#### Resposta de Erro (400 Bad Request)
+
+Se `accountId` ou `dreamId` não forem informados ou não forem UUIDs válidos.
+
+#### Resposta de Erro (404 Not Found)
+
+Se o sonho não for encontrado para aquela conta.
+
+---
+
+### 9. Buscar Dreams de um Usuário
+
+Busca todos os sonhos de um usuário.
+
+- **URL:** `/dreams?account_id={uuid-da-conta}`
+- **Método:** `GET`
+
+#### Resposta de Sucesso (200 OK)
+
+```json
+[
+  {
+    "dreamId": "uuid-do-sonho-1",
+    "accountId": "uuid-da-conta",
+    "title": "Minha casa própria",
+    "targetAmount": 500000.00,
+    "currentAmount": 0.00,
+    "deadline": "2030-01-01"
+  }
+  // ... outros sonhos
+]
+```
+
+#### Resposta de Erro (400 Bad Request)
+
+Se `account_id` não for informado.
+
+---
+
+### 10. Buscar Dream Específico
+
+Busca um sonho específico de um usuário.
+
+- **URL:** `/dreams?account_id={uuid-da-conta}&dreamId={uuid-do-sonho}`
+- **Método:** `GET`
+
+#### Resposta de Sucesso (200 OK)
+
+```json
+{
+  "dreamId": "uuid-do-sonho",
+  "accountId": "uuid-da-conta",
+  "title": "Minha casa própria",
+  "targetAmount": 500000.00,
+  "currentAmount": 1500.00,
+  "deadline": "2030-01-01"
+}
+```
+
+#### Resposta de Erro (404 Not Found)
+
+Se o sonho não for encontrado para aquela conta.
