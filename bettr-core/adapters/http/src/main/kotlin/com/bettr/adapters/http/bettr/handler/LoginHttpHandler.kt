@@ -10,6 +10,8 @@ import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
 
+import java.util.UUID
+
 class LoginHttpHandler(
     private val loginCommandHandler: LoginCommandHandler
 ) {
@@ -23,11 +25,11 @@ class LoginHttpHandler(
                     password = request.password
                 )
             )
-            ServerResponse.ok().bodyValueAndAwait(LoginResponse(accountId))
+            ServerResponse.ok().bodyValueAndAwait(LoginResponse(UUID.fromString(accountId)))
         } catch (e: IllegalArgumentException) {
             ServerResponse.status(HttpStatus.UNAUTHORIZED).buildAndAwait()
         }
     }
 }
 
-data class LoginResponse(val accountId: String)
+data class LoginResponse(val accountId: UUID)

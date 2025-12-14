@@ -13,13 +13,15 @@ import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
 
+import java.util.UUID
+
 class EnrollAccountHttpHandler(
     private val enrollAccountCommandHandler: EnrollAccountCommandHandler
 ) {
     suspend fun execute(req: ServerRequest): ServerResponse {
         return try {
             val accountId = enrollAccountCommandHandler.execute(req.toCommand())
-            status(CREATED).bodyValueAndAwait(EnrollAccountResponse(accountId))
+            status(CREATED).bodyValueAndAwait(EnrollAccountResponse(UUID.fromString(accountId)))
         } catch (e: IllegalArgumentException) {
             status(CONFLICT).bodyValueAndAwait(mapOf("message" to e.message))
         }
@@ -29,4 +31,4 @@ class EnrollAccountHttpHandler(
         awaitBody<EnrollAccountHttpRequest>().toCommand()
 }
 
-data class EnrollAccountResponse(val accountId: String)
+data class EnrollAccountResponse(val accountId: UUID)
