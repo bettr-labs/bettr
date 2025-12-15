@@ -6,7 +6,7 @@ import com.bettr.domain.AccountStatus
 class DeactivateAccountCommandHandler(
     private val accountRepository: AccountRepository
 ) {
-    fun execute(accountId: String) {
+    suspend fun execute(accountId: String) {
         val account = accountRepository.findById(accountId)
             ?: throw IllegalArgumentException("Account not found")
 

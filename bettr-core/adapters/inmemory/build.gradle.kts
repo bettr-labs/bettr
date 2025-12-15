@@ -1,4 +1,4 @@
-group = "com.bettr.adatpers.inmemory"
+group = "com.bettr.adapters.inmemory"
 
 dependencies {
     api(projects.bettrCore.domain)

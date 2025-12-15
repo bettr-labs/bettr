@@ -1,8 +1,8 @@
 package com.bettr.domain
 
 interface AccountRepository {
-    fun create(account: Account)
-    fun update(account: Account)
-    fun findById(id: String): Account?
-    fun findByNickname(nickname: String): Account?
+    suspend fun create(account: Account)
+    suspend fun update(account: Account)
+    suspend fun findById(id: String): Account?
+    suspend fun findByNickname(nickname: String): Account?
 }

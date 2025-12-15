@@ -6,6 +6,7 @@ import com.bettr.adapters.http.bettr.dream.DreamHttpHandler
 import com.bettr.adapters.http.bettr.handler.AccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.EnrollAccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.LoginHttpHandler
+import com.bettr.adapters.r2dbc.account.AccountR2dbcRepository
 import com.bettr.application.DeactivateAccountCommandHandler
 import com.bettr.application.EnrollAccountCommandHandler
 import com.bettr.application.GetAccountQueryHandler
@@ -13,7 +14,6 @@ import com.bettr.application.LoginCommandHandler
 import com.bettr.application.UpdateAccountCommandHandler
 import com.bettr.application.dream.CreateDreamsCommandHandler
 import com.bettr.application.dream.UpdateDreamCommandHandler
-import com.bettr.inmemory.AccountInMemoryRepository
 import com.bettr.inmemory.InMemoryDreamRepository
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -56,8 +56,10 @@ fun beans() =
         bean<DeactivateAccountCommandHandler>()
 
         // InMemory Repositories TODO - change to r2dbc
-        bean<AccountInMemoryRepository>()
         bean<InMemoryDreamRepository>()
+
+        // R2DBC Repositories
+        bean<AccountR2dbcRepository>()
     }
 
 fun main(args: Array<String>) {

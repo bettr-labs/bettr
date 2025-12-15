@@ -6,13 +6,13 @@ import com.bettr.application.UpdateAccountCommand
 import com.bettr.application.UpdateAccountCommandHandler
 import com.bettr.domain.Account
 import com.bettr.domain.AccountStatus
+import kotlinx.datetime.Instant
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
-import java.time.Instant
 import java.util.UUID
 
 class AccountHttpHandler(

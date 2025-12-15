@@ -6,6 +6,8 @@ include(
     "bettr-core:domain",
     "bettr-core:adapters:http",
     "bettr-core:adapters:inmemory",
+    "bettr-core:adapters:r2dbc",
+    "bettr-core:adapters:flyway",
     "bettr-core:application",
     "bettr-deployments:bettr-api"
 )

@@ -1,6 +1,7 @@
 package com.bettr.domain
 
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 enum class AccountStatus {
     ACTIVE,
@@ -21,7 +22,7 @@ data class Account(
                 id = id,
                 nickname = nickname,
                 password = password,
-                createdAt = Instant.now(),
+                createdAt = Clock.System.now(),
                 status = AccountStatus.ACTIVE
             ).validate()
         }

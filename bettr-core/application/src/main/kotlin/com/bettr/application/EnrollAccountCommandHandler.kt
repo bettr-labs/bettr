@@ -7,7 +7,7 @@ data class EnrollAccountCommandHandler(
     private val accountRepository: AccountRepository
 ) {
 
-    fun execute(command: EnrollAccountCommand): String {
+    suspend fun execute(command: EnrollAccountCommand): String {
         if (accountRepository.findByNickname(command.nickname) != null) {
             throw IllegalArgumentException("Nickname already in use")
         }

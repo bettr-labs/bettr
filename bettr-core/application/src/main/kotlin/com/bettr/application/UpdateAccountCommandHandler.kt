@@ -5,7 +5,7 @@ import com.bettr.domain.AccountRepository
 class UpdateAccountCommandHandler(
     private val accountRepository: AccountRepository
 ) {
-    fun execute(command: UpdateAccountCommand) {
+    suspend fun execute(command: UpdateAccountCommand) {
         val account = accountRepository.findById(command.accountId)
             ?: throw IllegalArgumentException("Account not found")
 

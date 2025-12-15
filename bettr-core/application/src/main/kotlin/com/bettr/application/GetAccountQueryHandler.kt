@@ -6,7 +6,7 @@ import com.bettr.domain.AccountRepository
 class GetAccountQueryHandler(
     private val accountRepository: AccountRepository
 ) {
-    fun execute(accountId: String): Account? {
+    suspend fun execute(accountId: String): Account? {
         return accountRepository.findById(accountId)
     }
 }

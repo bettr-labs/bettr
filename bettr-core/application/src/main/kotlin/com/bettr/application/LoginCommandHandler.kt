@@ -7,7 +7,7 @@ class LoginCommandHandler(
     private val accountRepository: AccountRepository
 ) {
 
-    fun execute(command: LoginCommand): String {
+    suspend fun execute(command: LoginCommand): String {
         val account = accountRepository.findByNickname(command.nickname)
             ?: throw IllegalArgumentException("combination of Nickname and password is invalid")
 

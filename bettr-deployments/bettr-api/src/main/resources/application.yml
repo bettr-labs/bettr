@@ -7,6 +7,19 @@ spring:
   web:
     resources:
       add-mappings: false
+  r2dbc:
+    name: bettr
+    url: r2dbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:bettr}
+    username: ${PGUSER:bettr}
+    password: ${PGPASSWORD:bettr}
+    pool:
+      initial-size: 5
+      max-size: 15
+      max-idle-time: 2m
+      max-life-time: 30m
+      validation-query: SELECT 1
+    properties:
+      preparedStatementCacheQueries: 0
 
 server:
   port: 8080

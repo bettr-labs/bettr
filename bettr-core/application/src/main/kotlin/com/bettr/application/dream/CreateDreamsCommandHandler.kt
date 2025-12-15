@@ -11,7 +11,7 @@ class CreateDreamsCommandHandler(
     private val dreamRepository: DreamRepository,
     private val accountRepository: AccountRepository
 ) {
-    fun execute(command: CreateDreamsCommand) {
+    suspend fun execute(command: CreateDreamsCommand) {
         val dreams = command.dreams.map {
             val account = accountRepository.findById(it.accountId)
                 ?: throw IllegalArgumentException("Account not found")
