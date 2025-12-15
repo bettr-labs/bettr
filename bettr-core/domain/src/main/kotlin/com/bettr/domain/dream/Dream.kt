@@ -8,6 +8,6 @@ data class Dream(
     val accountId: String,
     val title: String,
     val targetAmount: BigDecimal,
+    val currentAmount: BigDecimal,
     val deadline: LocalDate
 )
-

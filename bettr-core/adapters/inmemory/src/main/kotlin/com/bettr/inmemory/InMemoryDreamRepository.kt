@@ -10,6 +10,13 @@ class InMemoryDreamRepository : DreamRepository {
         this.dreams.addAll(dreams)
     }
 
+    override fun update(dream: Dream) {
+        val index = dreams.indexOfFirst { it.dreamId == dream.dreamId && it.accountId == dream.accountId }
+        if (index != -1) {
+            dreams[index] = dream
+        }
+    }
+
     override fun findByAccountId(accountId: String): List<Dream> {
         return dreams.filter { it.accountId == accountId }
     }
@@ -18,4 +25,3 @@ class InMemoryDreamRepository : DreamRepository {
         return dreams.find { it.accountId == accountId && it.dreamId == dreamId }
     }
 }
-

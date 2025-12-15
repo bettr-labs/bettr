@@ -10,4 +10,3 @@ enum class DreamType(val label: String, val emoji: String) {
     VACATION("Férias dos sonhos", "palm_tree"),
     HEALTH("Saúde/Fitness", "weight_lift")
 }
-

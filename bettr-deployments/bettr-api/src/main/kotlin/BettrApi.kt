@@ -3,11 +3,16 @@ package com.bettr
 import com.bettr.adapters.http.bettr.WebFluxConfiguration
 import com.bettr.adapters.http.bettr.apiRouter
 import com.bettr.adapters.http.bettr.dream.DreamHttpHandler
+import com.bettr.adapters.http.bettr.handler.AccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.EnrollAccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.LoginHttpHandler
+import com.bettr.application.DeactivateAccountCommandHandler
 import com.bettr.application.EnrollAccountCommandHandler
+import com.bettr.application.GetAccountQueryHandler
 import com.bettr.application.LoginCommandHandler
+import com.bettr.application.UpdateAccountCommandHandler
 import com.bettr.application.dream.CreateDreamsCommandHandler
+import com.bettr.application.dream.UpdateDreamCommandHandler
 import com.bettr.inmemory.AccountInMemoryRepository
 import com.bettr.inmemory.InMemoryDreamRepository
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -39,11 +44,16 @@ fun beans() =
         bean<EnrollAccountHttpHandler>()
         bean<LoginHttpHandler>()
         bean<DreamHttpHandler>()
+        bean<AccountHttpHandler>()
 
         // Command handlers
         bean<EnrollAccountCommandHandler>()
         bean<LoginCommandHandler>()
         bean<CreateDreamsCommandHandler>()
+        bean<UpdateDreamCommandHandler>()
+        bean<GetAccountQueryHandler>()
+        bean<UpdateAccountCommandHandler>()
+        bean<DeactivateAccountCommandHandler>()
 
         // InMemory Repositories TODO - change to r2dbc
         bean<AccountInMemoryRepository>()
