@@ -43,7 +43,74 @@ Retornado quando o nickname já está em uso.
 
 ---
 
-### 2. Login
+### 2. Buscar Conta
+
+Retorna os dados de uma conta.
+
+- **URL:** `/accounts/{accountId}`
+- **Método:** `GET`
+
+#### Resposta de Sucesso (200 OK)
+
+```json
+{
+  "id": "uuid-da-conta",
+  "nickname": "usuario_exemplo",
+  "createdAt": "2023-10-27T10:00:00Z",
+  "status": "ACTIVE"
+}
+```
+
+#### Resposta de Erro (404 Not Found)
+
+Se a conta não for encontrada.
+
+---
+
+### 3. Atualizar Conta
+
+Atualiza dados da conta (nickname).
+
+- **URL:** `/accounts/{accountId}`
+- **Método:** `PATCH`
+- **Content-Type:** `application/json`
+
+#### Corpo da Requisição
+
+```json
+{
+  "nickname": "novo_nickname"
+}
+```
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+#### Resposta de Erro (404 Not Found)
+
+Se a conta não for encontrada.
+
+---
+
+### 4. Desativar Conta
+
+Desativa uma conta (muda status para INACTIVE).
+
+- **URL:** `/accounts/{accountId}/deactivate`
+- **Método:** `PATCH`
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+#### Resposta de Erro (404 Not Found)
+
+Se a conta não for encontrada.
+
+---
+
+### 5. Login
 
 Autentica um usuário existente.
 
@@ -70,15 +137,25 @@ Autentica um usuário existente.
 
 #### Resposta de Erro (401 Unauthorized)
 
-Retornado quando as credenciais são inválidas.
+Retornado quando as credenciais são inválidas ou a conta está inativa.
 
+**Credenciais Inválidas:**
 ```json
-// Sem corpo (ou corpo de erro padrão do Spring)
+{
+  "reason": "combination of Nickname and password is invalid"
+}
+```
+
+**Conta Inativa:**
+```json
+{
+  "reason": "account is inactive"
+}
 ```
 
 ---
 
-### 3. Tipos de Dreams
+### 6. Tipos de Dreams
 
 Lista os tipos de sonhos disponíveis.
 
@@ -105,11 +182,11 @@ Lista os tipos de sonhos disponíveis.
 
 ---
 
-### 4. Criar Dreams
+### 7. Criar Dreams
 
-Cadastra uma lista de sonhos para um usuário.
+Cadastra uma lista de sonhos para uma conta específica. `currentAmount` é inicializado como zero.
 
-- **URL:** `/dreams`
+- **URL:** `/accounts/{accountId}/dreams`
 - **Método:** `POST`
 - **Content-Type:** `application/json`
 
@@ -118,13 +195,11 @@ Cadastra uma lista de sonhos para um usuário.
 ```json
 [
   {
-    "accountId": "uuid-da-conta",
     "title": "Minha casa própria",
     "targetAmount": 500000.00,
     "deadline": "2030-01-01"
   },
   {
-    "accountId": "uuid-da-conta",
     "title": "Viagem para Paris",
     "targetAmount": 15000.00,
     "deadline": "2025-12-31"
@@ -136,13 +211,53 @@ Cadastra uma lista de sonhos para um usuário.
 
 Retorna 200 OK (sem corpo ou vazio).
 
+#### Resposta de Erro (400 Bad Request)
+
+Se a conta informada não existir.
+
+```json
+{
+  "message": "Account not found"
+}
+```
+
 ---
 
-### 5. Buscar Dreams de um Usuário
+### 8. Atualizar Dream (Depositar)
 
-Busca todos os sonhos de um usuário.
+Atualiza o valor atual (`currentAmount`) de um sonho específico.
 
-- **URL:** `/dreams?account_id={uuid-da-conta}`
+- **URL:** `/accounts/{accountId}/dreams/{dreamId}`
+- **Método:** `PATCH`
+- **Content-Type:** `application/json`
+
+#### Corpo da Requisição
+
+```json
+{
+  "currentAmount": 1500.00
+}
+```
+
+#### Resposta de Sucesso (200 OK)
+
+Retorna 200 OK (sem corpo ou vazio).
+
+#### Resposta de Erro (400 Bad Request)
+
+Se `accountId` ou `dreamId` não forem informados ou não forem UUIDs válidos.
+
+#### Resposta de Erro (404 Not Found)
+
+Se o sonho não for encontrado para aquela conta.
+
+---
+
+### 9. Buscar Dreams de uma Conta
+
+Busca todos os sonhos de uma conta específica.
+
+- **URL:** `/accounts/{accountId}/dreams`
 - **Método:** `GET`
 
 #### Resposta de Sucesso (200 OK)
@@ -154,6 +269,7 @@ Busca todos os sonhos de um usuário.
     "accountId": "uuid-da-conta",
     "title": "Minha casa própria",
     "targetAmount": 500000.00,
+    "currentAmount": 0.00,
     "deadline": "2030-01-01"
   }
   // ... outros sonhos
@@ -162,15 +278,15 @@ Busca todos os sonhos de um usuário.
 
 #### Resposta de Erro (400 Bad Request)
 
-Se `account_id` não for informado.
+Se `accountId` não for um UUID válido.
 
 ---
 
-### 6. Buscar Dream Específico
+### 10. Buscar Dream Específico
 
-Busca um sonho específico de um usuário.
+Busca um sonho específico de uma conta.
 
-- **URL:** `/dreams?account_id={uuid-da-conta}&dreamId={uuid-do-sonho}`
+- **URL:** `/accounts/{accountId}/dreams/{dreamId}`
 - **Método:** `GET`
 
 #### Resposta de Sucesso (200 OK)
@@ -181,6 +297,20 @@ Busca um sonho específico de um usuário.
   "accountId": "uuid-da-conta",
   "title": "Minha casa própria",
   "targetAmount": 500000.00,
+  "currentAmount": 1500.00,
+  "deadline": "2030-01-01"
+}
+```
+
+#### Resposta de Erro (404 Not Found)
+
+Se o sonho não for encontrado para aquela conta.
+{
+  "dreamId": "uuid-do-sonho",
+  "accountId": "uuid-da-conta",
+  "title": "Minha casa própria",
+  "targetAmount": 500000.00,
+  "currentAmount": 1500.00,
   "deadline": "2030-01-01"
 }
 ```

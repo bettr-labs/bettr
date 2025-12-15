@@ -2,6 +2,8 @@ package com.bettr.adapters.http.bettr.dream
 
 import com.bettr.application.dream.CreateDreamsCommand
 import com.bettr.application.dream.CreateDreamsCommandHandler
+import com.bettr.application.dream.UpdateDreamCommand
+import com.bettr.application.dream.UpdateDreamCommandHandler
 import com.bettr.domain.dream.DreamRepository
 import com.bettr.domain.dream.DreamType
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -16,6 +18,7 @@ import java.util.UUID
 
 class DreamHttpHandler(
     private val createDreamsCommandHandler: CreateDreamsCommandHandler,
+    private val updateDreamCommandHandler: UpdateDreamCommandHandler,
     private val dreamRepository: DreamRepository
 ) {
     suspend fun getDreamTypes(req: ServerRequest): ServerResponse {
@@ -30,33 +33,59 @@ class DreamHttpHandler(
     }
 
     suspend fun createDreams(req: ServerRequest): ServerResponse {
+        val accountId = req.pathVariable("accountId")
+        validateUUID(accountId, "accountId")
+
         val request = req.awaitBody<List<CreateDreamRequest>>()
         val command = CreateDreamsCommand(
             dreams = request.map {
                 CreateDreamsCommand.DreamCommand(
-                    accountId = it.accountId.toString(),
+                    accountId = accountId,
                     title = it.title,
                     targetAmount = it.targetAmount,
                     deadline = it.deadline
                 )
             }
         )
-        createDreamsCommandHandler.execute(command)
-        return ok().buildAndAwait()
+        try {
+            createDreamsCommandHandler.execute(command)
+            return ok().buildAndAwait()
+        } catch (e: IllegalArgumentException) {
+            return ServerResponse.badRequest().bodyValueAndAwait(mapOf("message" to e.message))
+        }
+    }
+
+    suspend fun updateDream(req: ServerRequest): ServerResponse {
+        val accountId = req.pathVariable("accountId")
+        val dreamId = req.pathVariable("dreamId")
+
+        validateUUID(accountId, "accountId")
+        validateUUID(dreamId, "dreamId")
+
+        val request = req.awaitBody<UpdateDreamRequest>()
+        val command = UpdateDreamCommand(
+            accountId = accountId,
+            dreamId = dreamId,
+            currentAmount = request.currentAmount
+        )
+        try {
+            updateDreamCommandHandler.execute(command)
+            return ok().buildAndAwait()
+        } catch (e: IllegalArgumentException) {
+            return ServerResponse.notFound().buildAndAwait()
+        }
     }
 
     suspend fun getDreams(req: ServerRequest): ServerResponse {
-        val accountId = req.queryParam("account_id").orElse(null)
-        val dreamId = req.queryParam("dreamId").orElse(null)
-
-        if (accountId == null) {
-            return ServerResponse.badRequest().bodyValueAndAwait("Missing account_id query parameter")
-        }
+        val accountId = req.pathVariable("accountId")
+        // Check if dreamId path variable exists (it might not if route is just /accounts/{id}/dreams)
+        val dreamId = try { req.pathVariable("dreamId") } catch (e: IllegalArgumentException) { null }
 
         try {
-            UUID.fromString(accountId)
+            validateUUID(accountId, "accountId")
+            if (dreamId != null) validateUUID(dreamId, "dreamId")
         } catch (e: IllegalArgumentException) {
-            return ServerResponse.badRequest().bodyValueAndAwait("Invalid account_id format. Must be UUID.")
+            return ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "Invalid UUID")
         }
 
         return if (dreamId != null) {
@@ -71,12 +100,22 @@ class DreamHttpHandler(
             ok().bodyValueAndAwait(dreams)
         }
     }
+
+    private fun validateUUID(id: String, fieldName: String) {
+        try {
+            UUID.fromString(id)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Invalid $fieldName format. Must be UUID.")
+        }
+    }
 }
 
 data class CreateDreamRequest(
-    val accountId: UUID,
     val title: String,
     val targetAmount: BigDecimal,
     val deadline: LocalDate
 )
 
+data class UpdateDreamRequest(
+    val currentAmount: BigDecimal
+)

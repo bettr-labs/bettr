@@ -11,6 +11,10 @@ class AccountInMemoryRepository : AccountRepository {
         repository[account.id] = account
     }
 
+    override fun update(account: Account) {
+        repository[account.id] = account
+    }
+
     override fun findById(id: String): Account? {
         return repository[id]
     }
