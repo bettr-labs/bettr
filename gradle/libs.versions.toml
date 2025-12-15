@@ -1,5 +1,5 @@
 [versions]
-compiler-java = "17"
+compiler-java = "21"
 compiler-kotlin = "2.0"
 kotlin = "2.0.21"
 spring-boot = "3.5.6"
