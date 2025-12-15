@@ -7,7 +7,11 @@ data class EnrollAccountCommandHandler(
     private val accountRepository: AccountRepository
 ) {
 
-    fun execute(command: EnrollAccountCommand) {
+    fun execute(command: EnrollAccountCommand): String {
+        if (accountRepository.findByNickname(command.nickname) != null) {
+            throw IllegalArgumentException("Nickname already in use")
+        }
+
         val account = Account.enroll(
             id = command.aggregateId,
             nickname = command.nickname,
@@ -15,5 +19,6 @@ data class EnrollAccountCommandHandler(
         )
 
         accountRepository.create(account)
+        return account.id
     }
 }

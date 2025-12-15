@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.awaitBody
+import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
+
+import java.util.UUID
 
 class LoginHttpHandler(
     private val loginCommandHandler: LoginCommandHandler
@@ -16,16 +19,17 @@ class LoginHttpHandler(
         val request = req.awaitBody<LoginHttpRequest>()
         
         return try {
-            loginCommandHandler.execute(
+            val accountId = loginCommandHandler.execute(
                 LoginCommand(
                     nickname = request.nickname,
                     password = request.password
                 )
             )
-            ServerResponse.ok().buildAndAwait()
+            ServerResponse.ok().bodyValueAndAwait(LoginResponse(UUID.fromString(accountId)))
         } catch (e: IllegalArgumentException) {
-            ServerResponse.status(HttpStatus.UNAUTHORIZED).buildAndAwait()
+            ServerResponse.status(HttpStatus.UNAUTHORIZED).bodyValueAndAwait(mapOf("reason" to e.message))
         }
     }
 }
 
+data class LoginResponse(val accountId: UUID)
