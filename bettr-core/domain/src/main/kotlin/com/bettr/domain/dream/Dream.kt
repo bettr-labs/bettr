@@ -11,3 +11,7 @@ data class Dream(
     val currentAmount: BigDecimal,
     val deadline: LocalDate
 )
+<<<<<<< HEAD
+=======
+
+>>>>>>> ce578694087b92af98eff4e83594217caad986cd

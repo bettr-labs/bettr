@@ -14,6 +14,10 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
 import java.math.BigDecimal
 import java.time.LocalDate
+<<<<<<< HEAD
+=======
+
+>>>>>>> ce578694087b92af98eff4e83594217caad986cd
 import java.util.UUID
 
 class DreamHttpHandler(
@@ -33,6 +37,7 @@ class DreamHttpHandler(
     }
 
     suspend fun createDreams(req: ServerRequest): ServerResponse {
+<<<<<<< HEAD
         val accountId = req.pathVariable("accountId")
         validateUUID(accountId, "accountId")
 
@@ -41,12 +46,25 @@ class DreamHttpHandler(
             dreams = request.map {
                 CreateDreamsCommand.DreamCommand(
                     accountId = accountId,
+=======
+        val request = req.awaitBody<List<CreateDreamRequest>>()
+        
+        request.forEach { 
+            validateUUID(it.accountId, "accountId") 
+        }
+
+        val command = CreateDreamsCommand(
+            dreams = request.map {
+                CreateDreamsCommand.DreamCommand(
+                    accountId = it.accountId,
+>>>>>>> ce578694087b92af98eff4e83594217caad986cd
                     title = it.title,
                     targetAmount = it.targetAmount,
                     deadline = it.deadline
                 )
             }
         )
+<<<<<<< HEAD
         try {
             createDreamsCommandHandler.execute(command)
             return ok().buildAndAwait()
@@ -58,6 +76,19 @@ class DreamHttpHandler(
     suspend fun updateDream(req: ServerRequest): ServerResponse {
         val accountId = req.pathVariable("accountId")
         val dreamId = req.pathVariable("dreamId")
+=======
+        createDreamsCommandHandler.execute(command)
+        return ok().buildAndAwait()
+    }
+
+    suspend fun updateDream(req: ServerRequest): ServerResponse {
+        val accountId = req.queryParam("accountId").orElse(null)
+        val dreamId = req.queryParam("dreamId").orElse(null)
+
+        if (accountId == null || dreamId == null) {
+            return ServerResponse.badRequest().bodyValueAndAwait("Missing accountId or dreamId query parameter")
+        }
+>>>>>>> ce578694087b92af98eff4e83594217caad986cd
 
         validateUUID(accountId, "accountId")
         validateUUID(dreamId, "dreamId")
@@ -77,12 +108,24 @@ class DreamHttpHandler(
     }
 
     suspend fun getDreams(req: ServerRequest): ServerResponse {
+<<<<<<< HEAD
         val accountId = req.pathVariable("accountId")
         // Check if dreamId path variable exists (it might not if route is just /accounts/{id}/dreams)
         val dreamId = try { req.pathVariable("dreamId") } catch (e: IllegalArgumentException) { null }
 
         try {
             validateUUID(accountId, "accountId")
+=======
+        val accountId = req.queryParam("account_id").orElse(null)
+        val dreamId = req.queryParam("dreamId").orElse(null)
+
+        if (accountId == null) {
+            return ServerResponse.badRequest().bodyValueAndAwait("Missing account_id query parameter")
+        }
+
+        try {
+            validateUUID(accountId, "account_id")
+>>>>>>> ce578694087b92af98eff4e83594217caad986cd
             if (dreamId != null) validateUUID(dreamId, "dreamId")
         } catch (e: IllegalArgumentException) {
             return ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "Invalid UUID")
@@ -111,6 +154,10 @@ class DreamHttpHandler(
 }
 
 data class CreateDreamRequest(
+<<<<<<< HEAD
+=======
+    val accountId: String,
+>>>>>>> ce578694087b92af98eff4e83594217caad986cd
     val title: String,
     val targetAmount: BigDecimal,
     val deadline: LocalDate

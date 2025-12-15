@@ -305,3 +305,16 @@ Busca um sonho específico de uma conta.
 #### Resposta de Erro (404 Not Found)
 
 Se o sonho não for encontrado para aquela conta.
+{
+  "dreamId": "uuid-do-sonho",
+  "accountId": "uuid-da-conta",
+  "title": "Minha casa própria",
+  "targetAmount": 500000.00,
+  "currentAmount": 1500.00,
+  "deadline": "2030-01-01"
+}
+```
+
+#### Resposta de Erro (404 Not Found)
+
+Se o sonho não for encontrado para aquela conta.
