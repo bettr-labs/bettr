@@ -3,6 +3,7 @@ package com.bettr
 import com.bettr.adapters.http.bettr.WebFluxConfiguration
 import com.bettr.adapters.http.bettr.apiRouter
 import com.bettr.adapters.http.bettr.dream.DreamHttpHandler
+import com.bettr.adapters.http.bettr.bet_types.BetTypesHttpHandler
 import com.bettr.adapters.http.bettr.handler.AccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.EnrollAccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.LoginHttpHandler
@@ -44,6 +45,7 @@ fun beans() =
         bean<EnrollAccountHttpHandler>()
         bean<LoginHttpHandler>()
         bean<DreamHttpHandler>()
+        bean<BetTypesHttpHandler>()
         bean<AccountHttpHandler>()
 
         // Command handlers
