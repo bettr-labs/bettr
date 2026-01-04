@@ -25,8 +25,7 @@ class DreamHttpHandler(
         val types = DreamType.values().map {
             mapOf(
                 "key" to it.name,
-                "label" to it.label,
-                "emoji" to it.emoji
+                "label" to it.label
             )
         }
         return ok().bodyValueAndAwait(types)

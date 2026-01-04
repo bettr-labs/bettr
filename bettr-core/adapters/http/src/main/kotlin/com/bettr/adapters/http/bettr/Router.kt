@@ -1,6 +1,7 @@
 package com.bettr.adapters.http.bettr
 
 import com.bettr.adapters.http.bettr.dream.DreamHttpHandler
+import com.bettr.adapters.http.bettr.bet_types.BetTypesHttpHandler
 import com.bettr.adapters.http.bettr.handler.AccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.EnrollAccountHttpHandler
 import com.bettr.adapters.http.bettr.handler.LoginHttpHandler
@@ -11,6 +12,7 @@ fun apiRouter(
     enrollAccountHttpHandler: EnrollAccountHttpHandler,
     loginHttpHandler: LoginHttpHandler,
     dreamHttpHandler: DreamHttpHandler,
+    betTypesHttpHandler: BetTypesHttpHandler,
     accountHttpHandler: AccountHttpHandler
 ) = coRouter {
     accept(APPLICATION_JSON).nest {
@@ -43,6 +45,9 @@ fun apiRouter(
         }
         GET("/accounts/{accountId}/dreams/{dreamId}") { req ->
             dreamHttpHandler.getDreams(req)
+        }
+        GET("/bets-types") { req ->
+            betTypesHttpHandler.getBetTypes(req)
         }
     }
 }
