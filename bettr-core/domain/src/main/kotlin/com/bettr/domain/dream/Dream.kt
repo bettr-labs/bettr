@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Dream(
-    val dreamId: String,
+    val id: String,
     val accountId: String,
     val title: String,
     val targetAmount: BigDecimal,

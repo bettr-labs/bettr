@@ -21,7 +21,7 @@ class CreateDreamsCommandHandler(
             }
 
             Dream(
-                dreamId = UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(),
                 accountId = it.accountId,
                 title = it.title,
                 targetAmount = it.targetAmount,

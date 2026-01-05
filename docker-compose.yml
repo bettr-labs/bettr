@@ -12,11 +12,29 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U bettr"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  flyway:
+    image: flyway/flyway:9
+    container_name: bettr-flyway
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: migrate
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/bettr
+      FLYWAY_USER: bettr
+      FLYWAY_PASSWORD: bettr
+      FLYWAY_LOCATIONS: filesystem:/flyway/db/migration
+      FLYWAY_BASELINE_ON_MIGRATE: "true"
+    volumes:
+      - ./bettr-core/adapters/flyway/src/main/resources/db/migration:/flyway/db/migration
+    restart: "no"
 
 volumes:
   postgres_data:

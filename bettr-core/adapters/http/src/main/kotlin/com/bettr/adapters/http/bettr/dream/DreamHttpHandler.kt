@@ -68,16 +68,22 @@ class DreamHttpHandler(
             currentAmount = request.currentAmount
         )
         try {
-            updateDreamCommandHandler.execute(command)
-            return ok().buildAndAwait()
+            val updated = updateDreamCommandHandler.execute(command)
+            println("Update result: $updated") 
+            return if (updated) {
+                ServerResponse.ok().buildAndAwait()
+            } else {
+                ServerResponse.notFound().buildAndAwait()
+            }
         } catch (e: IllegalArgumentException) {
-            return ServerResponse.notFound().buildAndAwait()
+            return ServerResponse.badRequest().buildAndAwait()
+        } catch (e: Exception) {
+            return ServerResponse.status(500).buildAndAwait()
         }
     }
 
     suspend fun getDreams(req: ServerRequest): ServerResponse {
         val accountId = req.pathVariable("accountId")
-        // Check if dreamId path variable exists (it might not if route is just /accounts/{id}/dreams)
         val dreamId = try { req.pathVariable("dreamId") } catch (e: IllegalArgumentException) { null }
 
         try {
@@ -88,14 +94,14 @@ class DreamHttpHandler(
         }
 
         return if (dreamId != null) {
-            val dream = dreamRepository.findByAccountIdAndDreamId(accountId, dreamId)
+            val dream = dreamRepository.findByAccountIdAndDreamId(dreamId, accountId)
             if (dream != null) {
                 ok().bodyValueAndAwait(dream)
             } else {
                 ServerResponse.notFound().buildAndAwait()
             }
         } else {
-            val dreams = dreamRepository.findByAccountId(accountId)
+            val dreams = dreamRepository.findAllByAccountId(accountId)
             ok().bodyValueAndAwait(dreams)
         }
     }
