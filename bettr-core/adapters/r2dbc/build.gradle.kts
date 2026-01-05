@@ -10,8 +10,9 @@ dependencies {
     implementation(libs.r2dbc.postgresql)
     implementation(libs.slf4j.api)
     implementation(libs.kotlinx.coroutines.slf4j)
+    implementation(libs.kotlinx.coroutines.reactor)
+
 
     testImplementation(libs.slf4j.simple)
     testRuntimeOnly(libs.postgresql.jdbc.driver)
-    testRuntimeOnly(libs.kotlinx.coroutines.reactor)
 }

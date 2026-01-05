@@ -8,8 +8,8 @@ class UpdateDreamCommandHandler(
     private val dreamRepository: DreamRepository,
     private val accountRepository: AccountRepository
 ) {
-    suspend fun execute(command: UpdateDreamCommand) {
-        val dream = dreamRepository.findByAccountIdAndDreamId(command.accountId, command.dreamId)
+    suspend fun execute(command: UpdateDreamCommand): Boolean {
+        val dream = dreamRepository.findByAccountIdAndDreamId(command.dreamId, command.accountId)
             ?: throw IllegalArgumentException("Dream not found")
 
         val account = accountRepository.findById(command.accountId)
@@ -23,7 +23,7 @@ class UpdateDreamCommandHandler(
             currentAmount = command.currentAmount
         )
 
-        dreamRepository.update(updatedDream)
+        return dreamRepository.update(updatedDream)
     }
 }
 

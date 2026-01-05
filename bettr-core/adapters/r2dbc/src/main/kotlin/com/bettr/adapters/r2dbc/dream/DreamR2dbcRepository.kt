@@ -10,6 +10,8 @@ import kotlinx.datetime.toKotlinInstant
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.await
 import org.springframework.r2dbc.core.flow
+import kotlinx.coroutines.reactor.awaitSingle
+
 import java.time.Instant
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -26,27 +28,31 @@ class DreamR2dbcRepository(
             dream -> 
             client.sql(DreamSqlExpressions.CREATE)
                 .bind("id", dream.id)
-                .bind("accountId", dream.accountId)
+                .bind("account_id", dream.accountId)
                 .bind("title", dream.title)
-                .bind("targetAmount", dream.targetAmount)
-                .bind("currentAmount", dream.currentAmount)
+                .bind("target_amount", dream.targetAmount)
+                .bind("current_amount", dream.currentAmount)
                 .bind("deadline", dream.deadline)
                 .await()
         }
     }
 
-    override suspend fun update(dream: Dream) {
-        client.sql(DreamSqlExpressions.UPDATE)
+    override suspend fun update(dream: Dream): Boolean {
+        val rowsUpdated = client.sql(DreamSqlExpressions.UPDATE)
             .bind("id", dream.id)
-            .bind("targetAmount", dream.targetAmount)
-            .bind("currentAmount", dream.currentAmount)
+            .bind("target_amount", dream.targetAmount)
+            .bind("current_amount", dream.currentAmount)
             .bind("deadline", dream.deadline)
-            .await()
+            .fetch()
+            .rowsUpdated()
+            .awaitSingle()
+    
+        return rowsUpdated > 0
     }
 
     override suspend fun findAllByAccountId(accountId: String): List<Dream> {
         return client.sql(DreamSqlExpressions.FIND_ALL_BY_ACCOUNT_ID)
-            .bind("accountId", accountId)
+            .bind("account_id", accountId)
             .map { row, _ -> row.toDream() }
             .flow()
             .toList()
@@ -55,7 +61,7 @@ class DreamR2dbcRepository(
     override suspend fun findByAccountIdAndDreamId(id: String, accountId: String): Dream? {
         return client.sql(DreamSqlExpressions.FIND_BY_ACCOUNT_ID_AND_DREAM_ID)
             .bind("id", id)
-            .bind("accountId", accountId)
+            .bind("account_id", accountId)
             .map { row, _ -> row.toDream() }
             .flow()
             .firstOrNull()
@@ -63,10 +69,10 @@ class DreamR2dbcRepository(
 
     private fun Row.toDream() = Dream(
         id = this.get<String>("id"),
-        accountId = this.get<String>("accountId"),
+        accountId = this.get<String>("account_id"),
         title = this.get<String>("title"),
-        targetAmount = this.get<BigDecimal>("targetAmount"),
-        currentAmount = this.get<BigDecimal>("currentAmount"),
+        targetAmount = this.get<BigDecimal>("target_amount"),
+        currentAmount = this.get<BigDecimal>("current_amount"),
         deadline = this.get<LocalDate>("deadline")
     )
 }
