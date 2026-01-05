@@ -1,16 +1,7 @@
 package com.bettr.adapters.r2dbc.dream
 
 object DreamSqlExpressions {
-/*
-data class Dream(
-    val id: String,
-    val accountId: String,
-    val title: String,
-    val targetAmount: BigDecimal,
-    val currentAmount: BigDecimal,
-    val deadline: LocalDate
-)
- */
+
     const val CREATE = """
         INSERT INTO dreams (id, accountId, title, targetAmount, currentAmount, deadline)
         VALUES (:id, :accountId, :title, :targetAmount, :currentAmount, :deadline)
