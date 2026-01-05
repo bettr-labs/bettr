@@ -95,7 +95,7 @@ class DreamHttpHandler(
                 ServerResponse.notFound().buildAndAwait()
             }
         } else {
-            val dreams = dreamRepository.findByAccountId(accountId)
+            val dreams = dreamRepository.findAllByAccountId(accountId)
             ok().bodyValueAndAwait(dreams)
         }
     }
