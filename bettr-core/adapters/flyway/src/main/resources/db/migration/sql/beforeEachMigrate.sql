@@ -1,2 +1,0 @@
-SET ROLE 'bettr';
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

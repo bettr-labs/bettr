@@ -56,15 +56,15 @@ class DreamHttpHandler(
 
     suspend fun updateDream(req: ServerRequest): ServerResponse {
         val accountId = req.pathVariable("accountId")
-        val dreamId = req.pathVariable("dreamId")
+        val id = req.pathVariable("dreamId")
 
         validateUUID(accountId, "accountId")
-        validateUUID(dreamId, "dreamId")
+        validateUUID(id, "dreamId")
 
         val request = req.awaitBody<UpdateDreamRequest>()
         val command = UpdateDreamCommand(
             accountId = accountId,
-            dreamId = dreamId,
+            dreamId = id,
             currentAmount = request.currentAmount
         )
         try {

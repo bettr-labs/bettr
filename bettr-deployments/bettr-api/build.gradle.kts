@@ -8,8 +8,7 @@ group = "com.bettr.deployments"
 dependencies {
     implementation(platform(rootProject.libs.spring.boot.bom))
     implementation(projects.bettrCore.adapters.http)
-    implementation(projects.bettrCore.adapters.inmemory)
-    implementation(projects.bettrCore.adapters.r2dbc)
+    implementation(projects.bettrCore.adapters.nosql)
     implementation(libs.kotlin.logging)
     implementation(libs.kotlinx.coroutines.reactor)
     implementation(libs.kotlinx.serialization.json)
