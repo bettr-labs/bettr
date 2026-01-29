@@ -14,7 +14,6 @@ micrometer = "1.14.3"
 valiktor = "0.12.0"
 javax-money-api = "1.1"
 moneta = "1.4.4"
-flyway = "9.22.3"
 
 netty = "4.2.5.Final"
 json-smart = "2.5.2"
@@ -51,7 +50,6 @@ spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-s
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-boot-starter-log4j2 = { module = "org.springframework.boot:spring-boot-starter-log4j2" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
-spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
 
 micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus" }
@@ -72,12 +70,6 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 netty-handler = { module = "io.netty:netty-handler", version.ref = "netty" }
 netty-http2 = { module = "io.netty:netty-codec-http2", version.ref = "netty" }
 netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
-
-flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
-jdbc-postgresql = { module = "org.postgresql:postgresql" }
-r2dbc-pool = { module = "io.r2dbc:r2dbc-pool" }
-r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql" }
-postgresql-jdbc-driver = { module = "org.postgresql:postgresql" }
 
 json-smart = { module = "net.minidev:json-smart", version.ref = "json-smart" }
 

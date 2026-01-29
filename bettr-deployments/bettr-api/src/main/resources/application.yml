@@ -7,22 +7,12 @@ spring:
   web:
     resources:
       add-mappings: false
-  r2dbc:
-    name: bettr
-    url: r2dbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:bettr}
-    username: ${PGUSER:bettr}
-    password: ${PGPASSWORD:bettr}
-    pool:
-      initial-size: 5
-      max-size: 15
-      max-idle-time: 2m
-      max-life-time: 30m
-      validation-query: SELECT 1
-    properties:
-      preparedStatementCacheQueries: 0
-
+  data:
+    mongodb:
+      uri: mongodb+srv://${MDB_USER}:${MDB_PASSWORD}@cluster0.ya3dzqm.mongodb.net/bettr?appName=${MDBCLUSTER:Cluster0}
+      database: bettr
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 management:
   endpoint:
